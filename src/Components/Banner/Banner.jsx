@@ -1,15 +1,28 @@
 import React from "react";
+import{useEffect,useState} from 'react'
+import axios from '../../axios'
 import './Banner.css'
+import { API_KEY,imageurl } from "../../Constants/Constants";
 function Banner(){
+
+    const[movie,setMovie]=useState()
+
+    useEffect(()=>{
+        axios.get(`trending/all/week?api_key=${API_KEY}`).then((response)=>{
+            console.log(response.data.results[0])
+            setMovie(response.data.results[0])
+        })
+    },[])
+
     return(
-    <div className='banner'>
+    <div style={{backgroundImage:`url(${movie ? imageurl + movie.backdrop_path : ""})`}} className='banner'>
         <div className="content">
-            <h1 className="title">Movie Name</h1>
+            <h1 className="title">{movie ? movie.title :""}</h1>
             <div className="banner_buttons">
                 <button className="button">Play</button>
                 <button className="button">My List</button>
             </div>
-            <h1 className="description">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here',</h1>
+            <h1 className="description">{movie? movie.overview :""}</h1>
 
         </div>
         <div className="fade_bottom"> </div>
